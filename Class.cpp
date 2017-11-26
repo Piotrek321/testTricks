@@ -39,3 +39,8 @@ void Class::getStdFunctionAsParameter(std::function<void(int)> fnc) {
   cout << "void Class::getStdFunctionAsParameter(std::function<void(int)> fnc)"
        << endl;
 }
+void Class::getStdUniquePtr(std::unique_ptr<int> uniqueptr) {
+  cout << "void Class::getStdUniquePtr(std::unique_ptr<int> uniqueptr). "
+          "*uniqueptr: "
+       << *uniqueptr << endl;
+}

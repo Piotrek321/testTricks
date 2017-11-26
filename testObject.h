@@ -9,6 +9,7 @@ public:
   void zrobCos();
   void methodCreateSomeObjectInside();
   void getStdFunctionAsParameter(std::function<void(int)> fnc);
+  void getUniquePtrAsParameter(unique_ptr<int> uptr);
 
   ClassIf *m_externalDependency;
 };

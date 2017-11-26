@@ -17,6 +17,7 @@ public:
   virtual void
   methodToBeCalledToInvokeAnotherMethodOnIt(anotherClass &anotherC) = 0;
   virtual void getStdFunctionAsParameter(std::function<void(int)> fnc) = 0;
+  virtual void getStdUniquePtr(std::unique_ptr<int> uniqueptr) = 0;
 };
 
 #endif // KLASAIF_H

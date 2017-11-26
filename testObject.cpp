@@ -41,3 +41,9 @@ void testObject::getStdFunctionAsParameter(std::function<void(int)> fnc) {
 
   m_externalDependency->getStdFunctionAsParameter(fnc);
 }
+
+void testObject::getUniquePtrAsParameter(unique_ptr<int> uptr) {
+  cout << " *uptr: " << *uptr << " uptr.get(): " << uptr.get()
+       << " *uptr.get(): " << *uptr.get() << endl;
+  m_externalDependency->getStdUniquePtr(std::move(uptr));
+}

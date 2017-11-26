@@ -4,7 +4,7 @@
 
 class Base {
 public:
-  Base(int i) { cout << "Base(int i)\n"; };
+  Base(int i) { cout << "Base(int i)\n"; }
 
 protected:
   Base();
@@ -12,11 +12,11 @@ protected:
 // Object of Derived cannot be created
 class Derived : virtual public Base {
 public:
-  Derived() { cout << "Derived()\n"; };
+  Derived() { cout << "Derived()\n"; }
 };
 class Createable : virtual public Derived {
 public:
-  Createable(int x) : Base(x) { cout << "Createable()\n"; };
+  Createable(int x) : Base(x) { cout << "Createable()\n"; }
 };
 
 class Class : public ClassIf {
@@ -28,6 +28,7 @@ public:
   virtual unique_ptr<int> returnUnique();
   void methodToBeCalledToInvokeAnotherMethodOnIt(anotherClass &anotherC);
   virtual void getStdFunctionAsParameter(std::function<void(int)> fnc);
+  virtual void getStdUniquePtr(std::unique_ptr<int> uniqueptr);
 };
 
 #endif // KLASA_H

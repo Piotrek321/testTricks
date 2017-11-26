@@ -163,3 +163,10 @@ TEST_F(test1, InvokeArgument) {
   std::string output = testing::internal::GetCapturedStdout();
   EXPECT_EQ("functionToBeInvoked(int x): x==50\n", output);
 }
+
+TEST_F(test1, getUniquePtrAsArgument) {
+  unique_ptr<int> uptr = make_unique<int>(50);
+  EXPECT_CALL(*m_mock, getStdUniquePtrProxy(uptr.get()));
+
+  m_testObject->getUniquePtrAsParameter(move(uptr));
+}
