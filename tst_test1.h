@@ -25,6 +25,18 @@ protected:
   }
 };
 
+// PROTIP getValue1 must (?) be const to make it work
+MATCHER_P(compareStructs, struct_, "") {
+  return (arg.value1 == struct_.value1 && arg.str == struct_.str &&
+          arg.getValue2() == struct_.getValue2());
+};
+
+MATCHER_P(compareVecStructs, vecStruct_, "") {
+  return (arg[0].value1 == vecStruct_[0].value1 &&
+          arg[0].str == vecStruct_[0].str &&
+          arg[0].getValue2() == vecStruct_[0].getValue2());
+};
+
 /*
  * Test is used to show how does SetArgReferee and SaveArgPointee works.
  * It could be used to "capture" or set variables we dont have direct access to.
@@ -53,6 +65,11 @@ TEST_F(test1, SaveArgPointeeAndSetArgReferee) {
   delete str;
 }
 
+/*
+ * Test was writen to show how to handle methods which returns unique_ptr.
+ * First case is the dummiest one. It just return unique_ptr, it does not verify
+ * anything.
+ */
 TEST_F(test1, handleReturnUniquePtr) {
   auto handleReturnUniquePtr = []() {
     unique_ptr<int> ptr = make_unique<int>(int(4));
@@ -63,8 +80,25 @@ TEST_F(test1, handleReturnUniquePtr) {
   m_testObject->callReturnUniquePtr();
 }
 
+/*
+ * Test was writen to show how to handle methods which returns unique_ptr.
+ * Second case is also not the best one. It will just return nullptr.
+ */
+TEST_F(test1, handleReturnUniquePtrReturnsNullptr) {
+
+  EXPECT_CALL(*m_mock, returnUnique()).WillOnce(ReturnNull());
+  m_testObject->callReturnUniquePtr();
+}
+
+/*
+ * Test was writen to show how to handle methods which returns unique_ptr.
+ * In third case, we have to "capture" pointer retunred by test object. After
+ * method call, we verify that both unique_ptr and raw pointer points to the
+ * same address.
+ */
 TEST_F(test1, handleReturnUniquePtrAndVerifyAddress) {
   int *ptrToBeVerified = new int(100);
+
   auto handleReturnUniquePtr = [&ptrToBeVerified]() {
     unique_ptr<int> ptr;
     ptr.reset(ptrToBeVerified);
@@ -81,9 +115,9 @@ TEST_F(test1, handleReturnUniquePtrAndVerifyAddress) {
        << "\n&ptrToBeVerified: " << &ptrToBeVerified << "\n";
 
   cout << "*ptr1: " << *ptr1 << "\n"
-       << "&ptr1: " << &ptr1 << "\n";
-  cout << "*ptr1.get(): " << *ptr1.get() << "\nptr1.get(): " << ptr1.get()
-       << "\n";
+       << "&ptr1: " << &ptr1 << "\n"
+       << "*ptr1.get(): " << *ptr1.get() << "\n"
+       << "ptr1.get(): " << ptr1.get() << endl;
 }
 
 TEST_F(test1, throwingException) {
@@ -116,10 +150,10 @@ TEST_F(test1, test4) {
  * check (depends on) state of that barely created object. There are at least
  * two method to handle that.
  * DISCLAIMER:
- *   this course of action is (realizable) doable only if in object under test
- * (in our method)
- *   contains mocked method which takes as parameter (by reference or by
- * pointer) object mentioned above (this one which is created inside of method).
+ * this course of action is (realizable) doable only if object under test
+ * (our method) contains mocked method which takes as parameter (by reference or
+ * by pointer) object mentioned above (this one which is created inside of
+ * method).
  */
 
 TEST_F(test1, WithArgInvoke) {
@@ -170,10 +204,6 @@ TEST_F(test1, getUniquePtrAsArgument) {
 
   m_testObject->getUniquePtrAsParameter(move(uptr));
 }
-MATCHER_P(compareStructs, struct_, "") {
-  return (arg.value1 == struct_.value1 && arg.str == struct_.str);
-  // TODO how to call it????? arg.getValue2() == struct_.getValue2());
-};
 
 TEST_F(test1, getStructAsParameter) {
   SomeValuesStruct struct_;
@@ -196,22 +226,35 @@ TEST_F(test1, getStructAsParameterSecondMethod) {
   //                           Field(&SomeValuesStruct::str, Eq("string")),
   //                           Property(&SomeValuesStruct::getValue2,
   //                           Eq(2))))));
+  //
+  // OR
+  //
+  //  EXPECT_CALL(
+  //      *m_mock,
+  //      getStructAsParameter((AllOf(
+  //          Field(&SomeValuesStruct::value1, Eq(struct_.value1)),
+  //          Field(&SomeValuesStruct::str, Eq(struct_.str)),
+  //          Property(&SomeValuesStruct::getValue2,
+  //          Eq(struct_.getValue2()))))));
+  //
+  // OR
+  EXPECT_CALL(*m_mock, getStructAsParameter(compareStructs(struct_)));
 
-  EXPECT_CALL(
-      *m_mock,
-      getStructAsParameter((AllOf(
-          Field(&SomeValuesStruct::value1, Eq(struct_.value1)),
-          Field(&SomeValuesStruct::str, Eq(struct_.str)),
-          Property(&SomeValuesStruct::getValue2, Eq(struct_.getValue2()))))));
   m_testObject->getStructAsParameter();
 }
 
 TEST_F(test1, getVectorOfStructAsParameter) {
-  //  vector<SomeValuesStruct> struct_;
+  vector<SomeValuesStruct> vecStruct_;
+  SomeValuesStruct struct_;
+  struct_.str = "string";
+  struct_.value1 = 1;
+  struct_.setValue2(2);
+  vecStruct_.push_back(struct_);
 
-  //  EXPECT_CALL(*m_mock, getVectorOfStructAsParameter(_));
+  EXPECT_CALL(*m_mock,
+              getVectorOfStructAsParameter(compareVecStructs(vecStruct_)));
 
-  //  m_testObject->getVectorOfStructAsParameter();
+  m_testObject->getVectorOfStructAsParameter();
 }
 
 TEST_F(test1, getVectorOfSharedPtrOfIntsAsParameter) {

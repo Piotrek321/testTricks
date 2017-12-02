@@ -16,7 +16,7 @@ struct SomeValuesStruct {
   int getValue2() const {
     return value2;
   } // CONST IS NECESSARY FOR Propert(...) in tests //TODO How to handle non
-    // const getters?
+  // const getters?
   void setValue2(int x) { value2 = x; }
 
 private:
