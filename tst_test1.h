@@ -15,7 +15,7 @@ protected:
   testObject *m_testObject;
 
   virtual void SetUp() {
-    m_mock = new mockClass;
+    m_mock = new ::testing::StrictMock<mockClass>;
     m_testObject = new testObject(m_mock);
   }
 
@@ -169,4 +169,60 @@ TEST_F(test1, getUniquePtrAsArgument) {
   EXPECT_CALL(*m_mock, getStdUniquePtrProxy(uptr.get()));
 
   m_testObject->getUniquePtrAsParameter(move(uptr));
+}
+MATCHER_P(compareStructs, struct_, "") {
+  return (arg.value1 == struct_.value1 && arg.str == struct_.str);
+  // TODO how to call it????? arg.getValue2() == struct_.getValue2());
+};
+
+TEST_F(test1, getStructAsParameter) {
+  SomeValuesStruct struct_;
+  struct_.str = "string";
+  struct_.value1 = 1;
+  struct_.setValue2(2);
+
+  EXPECT_CALL(*m_mock, getStructAsParameter(compareStructs(struct_)));
+  m_testObject->getStructAsParameter();
+}
+
+TEST_F(test1, getStructAsParameterSecondMethod) {
+  SomeValuesStruct struct_;
+  struct_.str = "string";
+  struct_.value1 = 1;
+  struct_.setValue2(2);
+
+  //  EXPECT_CALL(*m_mock, getStructAsParameter((AllOf(
+  //                           Field(&SomeValuesStruct::value1, Eq(1)),
+  //                           Field(&SomeValuesStruct::str, Eq("string")),
+  //                           Property(&SomeValuesStruct::getValue2,
+  //                           Eq(2))))));
+
+  EXPECT_CALL(
+      *m_mock,
+      getStructAsParameter((AllOf(
+          Field(&SomeValuesStruct::value1, Eq(struct_.value1)),
+          Field(&SomeValuesStruct::str, Eq(struct_.str)),
+          Property(&SomeValuesStruct::getValue2, Eq(struct_.getValue2()))))));
+  m_testObject->getStructAsParameter();
+}
+
+TEST_F(test1, getVectorOfStructAsParameter) {
+  //  vector<SomeValuesStruct> struct_;
+
+  //  EXPECT_CALL(*m_mock, getVectorOfStructAsParameter(_));
+
+  //  m_testObject->getVectorOfStructAsParameter();
+}
+
+TEST_F(test1, getVectorOfSharedPtrOfIntsAsParameter) {
+  //  vector<shared_ptr<int>> vec;
+  //  shared_ptr<int> ptr;
+  //  for (int i = 0; i < 5; i++) {
+  //    ptr = make_shared<int>(i);
+  //    vec.push_back(ptr);
+  //  }
+
+  //  EXPECT_CALL(*m_mock, getVectorOfSharedPtrOfIntsAsParameter(_));
+
+  //  m_testObject->getVectorOfSharedPtrOfIntsAsParameter();
 }

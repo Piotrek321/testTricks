@@ -10,6 +10,9 @@ public:
   void methodCreateSomeObjectInside();
   void getStdFunctionAsParameter(std::function<void(int)> fnc);
   void getUniquePtrAsParameter(unique_ptr<int> uptr);
+  void getStructAsParameter();
+  void getVectorOfStructAsParameter();
+  void getVectorOfSharedPtrOfIntsAsParameter();
 
   ClassIf *m_externalDependency;
 };

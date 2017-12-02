@@ -43,7 +43,32 @@ void testObject::getStdFunctionAsParameter(std::function<void(int)> fnc) {
 }
 
 void testObject::getUniquePtrAsParameter(unique_ptr<int> uptr) {
-  cout << " *uptr: " << *uptr << " uptr.get(): " << uptr.get()
-       << " *uptr.get(): " << *uptr.get() << endl;
+  cout << "*uptr: " << *uptr << "\nuptr.get(): " << uptr.get()
+       << "\n*uptr.get(): " << *uptr.get() << endl;
   m_externalDependency->getStdUniquePtr(std::move(uptr));
+}
+
+void testObject::getStructAsParameter() {
+  SomeValuesStruct struct_;
+  struct_.str = "string";
+  struct_.value1 = 1;
+  struct_.setValue2(2);
+
+  m_externalDependency->getStructAsParameter(struct_);
+}
+void testObject::getVectorOfStructAsParameter() {
+  vector<SomeValuesStruct> vec;
+
+  m_externalDependency->getVectorOfStructAsParameter(vec);
+}
+void testObject::getVectorOfSharedPtrOfIntsAsParameter() {
+
+  vector<shared_ptr<int>> vec;
+  shared_ptr<int> ptr;
+  for (int i = 0; i < 5; i++) {
+    ptr = make_shared<int>(i);
+    vec.push_back(ptr);
+  }
+
+  m_externalDependency->getVectorOfSharedPtrOfIntsAsParameter(vec);
 }

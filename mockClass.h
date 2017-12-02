@@ -19,6 +19,11 @@ public:
                void(anotherClass &anotherC));
   MOCK_METHOD1(getStdFunctionAsParameter, void(std::function<void(int)> fnc));
   MOCK_METHOD1(getStdUniquePtrProxy, void(int *uniqueptr));
+  MOCK_METHOD1(getStructAsParameter, void(SomeValuesStruct &vec));
+  MOCK_METHOD1(getVectorOfStructAsParameter,
+               void(vector<SomeValuesStruct> &vec));
+  MOCK_METHOD1(getVectorOfSharedPtrOfIntsAsParameter,
+               void(vector<shared_ptr<int>> &vec));
 };
 
 #endif // MOCKKLASA_H

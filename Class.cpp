@@ -44,3 +44,8 @@ void Class::getStdUniquePtr(std::unique_ptr<int> uniqueptr) {
           "*uniqueptr: "
        << *uniqueptr << endl;
 }
+
+void Class::getStructAsParameter(SomeValuesStruct &vec) {}
+void Class::getVectorOfStructAsParameter(vector<SomeValuesStruct> &vec) {}
+void Class::getVectorOfSharedPtrOfIntsAsParameter(
+    vector<shared_ptr<int>> &vec) {}

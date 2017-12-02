@@ -29,6 +29,12 @@ public:
   void methodToBeCalledToInvokeAnotherMethodOnIt(anotherClass &anotherC);
   virtual void getStdFunctionAsParameter(std::function<void(int)> fnc);
   virtual void getStdUniquePtr(std::unique_ptr<int> uniqueptr);
+  virtual void getStructAsParameter(SomeValuesStruct &vec);
+  virtual void getVectorOfStructAsParameter(vector<SomeValuesStruct> &vec);
+  virtual void
+  getVectorOfSharedPtrOfIntsAsParameter(vector<shared_ptr<int>> &vec);
+
+  SomeValuesStruct m_someValuesStruct;
 };
 
 #endif // KLASA_H
