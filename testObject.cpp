@@ -57,11 +57,18 @@ void testObject::getStructAsParameter() {
 
   m_externalDependency->getStructAsParameter(struct_);
 }
-void testObject::getVectorOfStructAsParameter() {
-  vector<SomeValuesStruct> vec;
 
-  m_externalDependency->getVectorOfStructAsParameter(vec);
+void testObject::getVectorOfStructAsParameter() {
+  vector<SomeValuesStruct> vecStruct_;
+  SomeValuesStruct struct_;
+  struct_.str = "string";
+  struct_.value1 = 1;
+  struct_.setValue2(2);
+  vecStruct_.push_back(struct_);
+
+  m_externalDependency->getVectorOfStructAsParameter(vecStruct_);
 }
+
 void testObject::getVectorOfSharedPtrOfIntsAsParameter() {
 
   vector<shared_ptr<int>> vec;
@@ -72,4 +79,9 @@ void testObject::getVectorOfSharedPtrOfIntsAsParameter() {
   }
 
   m_externalDependency->getVectorOfSharedPtrOfIntsAsParameter(vec);
+}
+
+void testObject::uniquePtrAsParameter() {
+  m_externalDependency->sharedPtrAsParameterCreatedInside(
+      make_shared<CustomClass>("Object from function"));
 }

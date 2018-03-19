@@ -258,14 +258,32 @@ TEST_F(test1, getVectorOfStructAsParameter) {
 }
 
 TEST_F(test1, getVectorOfSharedPtrOfIntsAsParameter) {
-  //  vector<shared_ptr<int>> vec;
-  //  shared_ptr<int> ptr;
-  //  for (int i = 0; i < 5; i++) {
-  //    ptr = make_shared<int>(i);
-  //    vec.push_back(ptr);
-  //  }
+  vector<shared_ptr<int>> vec;
+  shared_ptr<int> ptr;
+  for (int i = 0; i < 5; i++) {
+    ptr = make_shared<int>(i);
+    vec.push_back(ptr);
+  }
 
-  //  EXPECT_CALL(*m_mock, getVectorOfSharedPtrOfIntsAsParameter(_));
+  EXPECT_CALL(*m_mock, getVectorOfSharedPtrOfIntsAsParameter(_));
 
-  //  m_testObject->getVectorOfSharedPtrOfIntsAsParameter();
+  m_testObject->getVectorOfSharedPtrOfIntsAsParameter();
+}
+
+TEST_F(test1, uniquePtrAsParameter) {
+  auto pt = make_shared<CustomClass>("Object from test");
+  EXPECT_CALL(*m_mock, sharedPtrAsParameterCreatedInside(_))
+      .WillOnce(SetArgPointee<0>(*pt));
+
+  m_testObject->uniquePtrAsParameter();
+}
+
+TEST_F(test1, uniquePtrAsParameterInvoke) {
+  auto someLambda = [] {
+    auto pt = make_shared<CustomClass>("Object from test");
+  };
+  EXPECT_CALL(*m_mock, sharedPtrAsParameterCreatedInside(_))
+      .WillOnce(InvokeWithoutArgs(someLambda));
+
+  m_testObject->uniquePtrAsParameter();
 }

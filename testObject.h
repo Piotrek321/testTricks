@@ -13,6 +13,7 @@ public:
   void getStructAsParameter();
   void getVectorOfStructAsParameter();
   void getVectorOfSharedPtrOfIntsAsParameter();
+  void uniquePtrAsParameter();
 
   ClassIf *m_externalDependency;
 };

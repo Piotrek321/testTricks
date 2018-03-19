@@ -33,6 +33,7 @@ public:
   virtual void getVectorOfStructAsParameter(vector<SomeValuesStruct> &vec);
   virtual void
   getVectorOfSharedPtrOfIntsAsParameter(vector<shared_ptr<int>> &vec);
+  virtual void sharedPtrAsParameterCreatedInside(shared_ptr<CustomClass> up);
 
   SomeValuesStruct m_someValuesStruct;
 };

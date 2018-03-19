@@ -12,9 +12,11 @@ HEADERS +=     tst_yes.h \
     mockClass.h \
     tst_test1.h \
     testObject.h \
-    anotherClass.h
+    anotherClass.h \
+    customclass.h
 
 SOURCES +=     main.cpp \
     Class.cpp \
     testObject.cpp \
-    anotherClass.cpp
+    anotherClass.cpp \
+    customclass.cpp
